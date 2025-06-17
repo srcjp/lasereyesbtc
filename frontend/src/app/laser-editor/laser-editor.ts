@@ -39,7 +39,7 @@ export class LaserEditor {
     for (let i = 0; i < 2; i++) {
       const div = document.createElement('div');
       div.className = `laser ${this.laser.class}`;
-      div.dataset.index = i.toString();
+      div.dataset['index'] = i.toString();
       div.style.left = '50%';
       div.style.top = '50%';
       div.style.transform = 'translate(-50%, -50%)';
@@ -55,7 +55,7 @@ export class LaserEditor {
 
   startDrag(event: PointerEvent) {
     const target = event.target as HTMLElement;
-    const index = parseInt(target.dataset.index || '0', 10);
+    const index = parseInt(target.dataset['index'] || '0', 10);
     this.draggingIndex = index;
     const rect = target.getBoundingClientRect();
     this.dragOffsets[index] = {
