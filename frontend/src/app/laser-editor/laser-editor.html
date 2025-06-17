@@ -20,13 +20,13 @@
         (load)="onImageLoaded()"
       />
     </div>
-  </div>
-
-  <div class="controls">
-    <label class="file-link">
+    <label class="file-link choose-image">
       Choose Image
       <input type="file" (change)="onFileSelected($event)" hidden />
     </label>
+  </div>
+
+  <div class="controls">
     <button mat-button color="warn" (click)="deleteSelected()">Delete</button>
     <button mat-button color="primary" (click)="download()">Download</button>
   </div>

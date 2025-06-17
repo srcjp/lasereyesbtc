@@ -13,7 +13,11 @@ interface Laser {
   imports: [CommonModule, MatButtonModule],
   templateUrl: './laser-editor.html',
   styleUrls: ['./laser-editor.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    '(pointerdown)': 'onRootPointerDown($event)',
+    '(document:keydown)': 'onKeydown($event)'
+  }
 })
 export class LaserEditor {
   imageSrc: string | null = null;
@@ -225,6 +229,24 @@ export class LaserEditor {
     this.dragOffsets.splice(this.selectedOverlayIndex, 1);
     this.overlays.forEach((el, idx) => (el.dataset['index'] = idx.toString()));
     this.selectedOverlayIndex = null;
+  }
+
+  clearSelection() {
+    this.selectedOverlayIndex = null;
+    this.overlays.forEach(el => el.classList.remove('selected'));
+  }
+
+  onRootPointerDown(event: PointerEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.laser')) {
+      this.clearSelection();
+    }
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Delete') {
+      this.deleteSelected();
+    }
   }
 
   async download() {
