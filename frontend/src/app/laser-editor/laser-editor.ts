@@ -1,4 +1,5 @@
 import { Component, ElementRef } from '@angular/core';
+import html2canvas from 'html2canvas';
 
 interface Laser {
   id: number;
@@ -61,9 +62,14 @@ export class LaserEditor {
   }
 
   async download() {
-    const res = await fetch('/api/invoice', { method: 'POST' });
-    const invoice = await res.json();
-    alert(`Pay this invoice to download:\n${invoice.payment_request}`);
-    // TODO: poll invoice status then download with html2canvas
+    const container = this.host.nativeElement.querySelector(
+      '.image-container'
+    ) as HTMLElement;
+    if (!container) return;
+    const canvas = await html2canvas(container);
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = 'laser-eyes.png';
+    link.click();
   }
 }
