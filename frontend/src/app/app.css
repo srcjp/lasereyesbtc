@@ -1,0 +1,15 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #111;
+  color: white;
+}
+.links a {
+  margin-left: 1rem;
+  color: #f00;
+}
+main {
+  padding: 1rem;
+}
