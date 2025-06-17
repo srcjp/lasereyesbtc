@@ -1,9 +1,22 @@
 <div>
   <input type="file" (change)="onFileSelected($event)">
 </div>
+<div class="laser-options">
+  <img
+    *ngFor="let l of lasers"
+    [src]="l.url"
+    (click)="selectedLaser = l"
+    [class.selected]="selectedLaser === l"
+  />
+</div>
 <div class="editor">
   <div class="image-container">
     <img *ngIf="imageSrc" [src]="imageSrc" alt="uploaded" (load)="onImageLoaded()">
   </div>
 </div>
-<button (click)="download()">Download</button>
+<div class="controls">
+  <button (click)="scaleSelected(1.2)">Aumentar</button>
+  <button (click)="scaleSelected(0.8)">Diminuir</button>
+  <button (click)="deleteSelected()">Deletar</button>
+  <button (click)="download()">Download</button>
+</div>

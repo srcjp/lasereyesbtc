@@ -1,5 +1,7 @@
 .editor {
   margin-top: 1rem;
+  display: flex;
+  justify-content: center;
 }
 
 .image-container {
@@ -11,21 +13,30 @@
 .image-container img {
   display: block;
   width: 100%;
+  max-width: 80vw;
 }
 
 .laser {
   position: absolute;
   cursor: grab;
-}
-
-.eye-glow {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  background-image: url("https://cdn.glitch.me/a3cb1903-3df2-470f-9076-c2370808ed39%2Fthumbnails%2Fglowing-red-eyes-png-4%20(1).png");
-  background-size: cover;
+  width: 40px;
+  height: 40px;
+  background-size: contain;
   background-repeat: no-repeat;
-  cursor: grab;
-  z-index: 2;
+  background-position: center;
+}
+.laser.selected {
+  outline: 2px dashed #0f0;
+}
+.laser-options img {
+  width: 40px;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+.laser-options img.selected {
+  outline: 2px solid #0f0;
+}
+.controls {
+  margin-top: 1rem;
 }
 
