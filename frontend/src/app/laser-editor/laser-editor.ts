@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
 
@@ -11,7 +11,8 @@ interface Laser {
   selector: 'app-laser-editor',
   imports: [CommonModule],
   templateUrl: './laser-editor.html',
-  styleUrls: ['./laser-editor.css']
+  styleUrls: ['./laser-editor.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LaserEditor {
   imageSrc: string | null = null;
