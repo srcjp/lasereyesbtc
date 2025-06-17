@@ -22,9 +22,9 @@
   position: absolute;
   width: 30px;
   height: 30px;
-  border-radius: 50%;
-  background: radial-gradient(circle, yellow 0%, red 60%, red 100%);
-  box-shadow: 0 0 10px 4px red;
+  background-image: url("https://cdn.glitch.me/a3cb1903-3df2-470f-9076-c2370808ed39%2Fthumbnails%2Fglowing-red-eyes-png-4%20(1).png");
+  background-size: cover;
+  background-repeat: no-repeat;
   cursor: grab;
   z-index: 2;
 }
