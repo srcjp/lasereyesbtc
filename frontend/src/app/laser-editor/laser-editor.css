@@ -8,6 +8,8 @@
   margin-top: 1rem;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .image-container {
@@ -93,6 +95,10 @@
   color: #0f0;
   text-decoration: underline;
   margin-right: 0.5rem;
+}
+
+.editor .choose-image {
+  margin-left: 1rem;
 }
 
 .controls button {
