@@ -28,6 +28,20 @@
 .laser.selected {
   outline: 2px dashed #0f0;
 }
+.resize-handle {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: #0f0;
+  border: 2px solid #000;
+  cursor: nwse-resize;
+  display: none;
+}
+.laser.selected .resize-handle {
+  display: block;
+}
 .laser-options img {
   width: 40px;
   margin-right: 0.5rem;

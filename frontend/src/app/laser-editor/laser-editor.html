@@ -5,7 +5,7 @@
   <img
     *ngFor="let l of lasers"
     [src]="l.url"
-    (click)="selectedLaser = l"
+    (click)="selectLaser(l)"
     [class.selected]="selectedLaser === l"
   />
 </div>
