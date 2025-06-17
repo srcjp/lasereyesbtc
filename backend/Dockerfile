@@ -1,6 +1,6 @@
 FROM node:20
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm install --production || true
+RUN npm install --omit=dev
 COPY . .
-CMD ["node", "server.js"]
+CMD ["node", "backendserver.js"]
