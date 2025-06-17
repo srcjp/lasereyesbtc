@@ -1,0 +1,19 @@
+.ranking {
+  list-style: none;
+  padding: 0;
+}
+.ranking li {
+  margin: 0.5rem 0;
+}
+.position {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+.links a {
+  margin-left: 0.5rem;
+  color: #0f0;
+  text-decoration: none;
+}
+.links a:hover {
+  text-decoration: underline;
+}
