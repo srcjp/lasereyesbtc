@@ -19,3 +19,13 @@ Set the following environment variables before starting the server:
 - `CHARGE_MEMO` – memo to attach to created invoices (default `Laser eyes download`)
 
 The server listens on `PORT` (default 3000) and exposes `/invoice` endpoints.
+It also provides `/donations` for posting and retrieving contributor rankings.
+
+The following database variables configure the PostgreSQL connection (defaults
+match the `docker-compose.yml` setup):
+
+- `PGHOST` (default `db`)
+- `PGPORT` (default `5432`)
+- `PGUSER` (default `postgres`)
+- `PGPASSWORD` (default `postgres`)
+- `PGDATABASE` (default `lasereyes`)

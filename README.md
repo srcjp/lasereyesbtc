@@ -9,6 +9,19 @@ frontend/ - Angular application with the laser editor
 
 Both projects include Dockerfiles for containerized builds.
 
+## Running with Docker Compose
+
+The repository provides a `docker-compose.yml` file that builds the frontend and
+backend images and launches a PostgreSQL database. To start the entire stack run:
+
+```bash
+docker compose up -d
+```
+
+The Angular app will be available on port `8080` and the backend API on port
+`3000`. Environment variables such as `COINOS_API_KEY` can be passed to
+`docker compose` to configure invoice generation.
+
 ## Starting the backend
 
 To run the API locally:
@@ -27,3 +40,14 @@ The server requires the following environment variables:
 - `PORT` (optional) – port to listen on (defaults to 3000)
 
 After starting, the endpoints will be available at `http://localhost:PORT`.
+Use the `/donations` endpoint to submit contribution data and retrieve the
+ranking of top contributors ordered by amount.
+
+When running locally without Docker, configure PostgreSQL via the following
+environment variables (values shown match the compose setup):
+
+- `PGHOST` (`db`)
+- `PGPORT` (`5432`)
+- `PGUSER` (`postgres`)
+- `PGPASSWORD` (`postgres`)
+- `PGDATABASE` (`lasereyes`)
