@@ -6,7 +6,7 @@ import { LaserEditor } from './laser-editor/laser-editor';
   selector: 'app-root',
   imports: [RouterOutlet, LaserEditor],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
   protected title = 'frontend';
