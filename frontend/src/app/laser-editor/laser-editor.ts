@@ -1,4 +1,5 @@
 import { Component, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
 
 interface Laser {
@@ -8,7 +9,7 @@ interface Laser {
 
 @Component({
   selector: 'app-laser-editor',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './laser-editor.html',
   styleUrl: './laser-editor.css'
 })
