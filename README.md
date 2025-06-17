@@ -22,7 +22,7 @@ node backendserver.js
 The server requires the following environment variables:
 - `COINOS_URL` – base URL of your Coinos instance (default `https://coinos.io`)
 - `COINOS_API_KEY` – API key or JWT token from Coinos
-- `CHARGE_AMOUNT` – amount in satoshis per download (default `150`)
+- `CHARGE_AMOUNT` – amount in satoshis per download (minimum `150`, default `150`)
 - `CHARGE_MEMO` – memo for the created invoices (default `Laser eyes download`)
 - `PORT` (optional) – port to listen on (defaults to 3000)
 
