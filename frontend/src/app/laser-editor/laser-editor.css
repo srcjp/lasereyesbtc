@@ -20,9 +20,32 @@
 }
 
 .eye-glow {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 0, 0, 0.8) 0%, rgba(255, 0, 0, 0.3) 40%, rgba(255, 0, 0, 0) 70%);
-  box-shadow: 0 0 15px 8px rgba(255, 0, 0, 0.5);
+  position: absolute;
+  background: radial-gradient(circle, rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 0.4) 60%, rgba(255, 0, 0, 0) 80%);
+  box-shadow: 0 0 20px 10px rgba(255, 0, 0, 0.8);
+}
+
+.eye-glow::before,
+.eye-glow::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 180px;
+  height: 14px;
+  background: linear-gradient(to right, rgba(255, 0, 0, 1), rgba(255, 0, 0, 0));
+  filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.eye-glow::before {
+  left: calc(50% + 30px);
+}
+
+.eye-glow::after {
+  right: calc(50% + 30px);
+  transform: translateY(-50%) scaleX(-1);
 }
