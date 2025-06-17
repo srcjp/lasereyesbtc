@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import { toPng } from 'html-to-image';
 
 interface Laser {
@@ -9,7 +10,7 @@ interface Laser {
 
 @Component({
   selector: 'app-laser-editor',
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule],
   templateUrl: './laser-editor.html',
   styleUrls: ['./laser-editor.css'],
   encapsulation: ViewEncapsulation.None

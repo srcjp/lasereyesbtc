@@ -2,13 +2,18 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   background: #111;
   color: white;
 }
 .links a {
   margin-left: 1rem;
-  color: #f00;
+  color: #0f0;
+  cursor: pointer;
+  text-decoration: none;
+}
+.links a:hover {
+  text-decoration: underline;
 }
 main {
   padding: 1rem;
