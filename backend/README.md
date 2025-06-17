@@ -1,6 +1,6 @@
 # Backend
 
-This directory contains the Express server that provides API endpoints for creating and verifying LNbits invoices.
+This directory contains the Express server that creates and verifies invoices using a [Coinos](https://coinos.io) custodial wallet.
 
 ## Running locally
 
@@ -11,10 +11,11 @@ npm install
 node backendserver.js
 ```
 
-Set the following environment variables to connect to your LNbits instance:
+Set the following environment variables before starting the server:
 
-- `LNBITS_URL` – base URL of the LNbits server
-- `LNBITS_INVOICE_KEY` – invoice/read key
-- `LNBITS_ADMIN_KEY` – admin key for verifying payments
+- `COINOS_URL` – base URL of your Coinos instance (default `https://coinos.io`)
+- `COINOS_API_KEY` – API key or JWT token from Coinos
+- `CHARGE_AMOUNT` – amount in satoshis for each invoice (default `150`)
+- `CHARGE_MEMO` – memo to attach to created invoices (default `Laser eyes download`)
 
 The server listens on `PORT` (default 3000) and exposes `/invoice` endpoints.
