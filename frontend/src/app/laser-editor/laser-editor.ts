@@ -238,7 +238,7 @@ export class LaserEditor {
 
   onRootPointerDown(event: PointerEvent) {
     const target = event.target as HTMLElement;
-    if (!target.closest('.laser')) {
+    if (target.closest('.image-container') && !target.closest('.laser')) {
       this.clearSelection();
     }
   }
