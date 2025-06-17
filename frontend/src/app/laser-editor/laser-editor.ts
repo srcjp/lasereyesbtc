@@ -10,6 +10,7 @@ interface Laser {
 
 @Component({
   selector: 'app-laser-editor',
+  standalone: true,
   imports: [CommonModule, MatButtonModule],
   templateUrl: './laser-editor.html',
   styleUrls: ['./laser-editor.css'],

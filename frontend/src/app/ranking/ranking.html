@@ -1,0 +1,12 @@
+<h2>Top Contributors</h2>
+<ol class="ranking">
+  <li *ngFor="let c of contributors; let i = index">
+    <span class="position">{{ i + 1 }}.</span>
+    <span class="name">{{ c.name }}</span>
+    <span class="links">
+      <a [href]="c.nostr" target="_blank">nostr</a>
+      <a [href]="c.twitter" target="_blank">twitter</a>
+      <a [href]="c.instagram" target="_blank">instagram</a>
+    </span>
+  </li>
+</ol>

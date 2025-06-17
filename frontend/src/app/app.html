@@ -1,9 +1,11 @@
 <header>
   <h1>Laser Eyes</h1>
   <div class="links">
+    <a routerLink="/" >Home</a>
+    <a routerLink="/ranking">Ranking</a>
     <a href="#" (click)="openContribute(); $event.preventDefault()">Contribute</a>
   </div>
 </header>
 <main>
-  <app-laser-editor></app-laser-editor>
+  <router-outlet></router-outlet>
 </main>
