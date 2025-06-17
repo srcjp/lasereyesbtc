@@ -2,11 +2,8 @@
   <input type="file" (change)="onFileSelected($event)">
 </div>
 <div class="editor">
-  <div class="image-container" (drop)="onDrop($event)" (dragover)="allowDrop($event)">
-    <img *ngIf="imageSrc" [src]="imageSrc" alt="uploaded">
-  </div>
-  <div class="laser-list">
-    <div *ngFor="let l of lasers" class="laser-option {{l.class}}" draggable="true" (dragstart)="onDragStart($event,l)"></div>
+  <div class="image-container">
+    <img *ngIf="imageSrc" [src]="imageSrc" alt="uploaded" (load)="onImageLoaded()">
   </div>
 </div>
 <button (click)="download()">Download</button>
