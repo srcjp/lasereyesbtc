@@ -5,6 +5,5 @@
   <div class="image-container">
     <img *ngIf="imageSrc" [src]="imageSrc" alt="uploaded" (load)="onImageLoaded()">
   </div>
-  <p class="instructions">Pressione Ctrl + + ou Ctrl + - para redimensionar o laser selecionado.</p>
 </div>
 <button (click)="download()">Download</button>
