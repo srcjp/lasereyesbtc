@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 
 interface Laser {
   id: number;
@@ -89,13 +89,14 @@ export class LaserEditor {
       '.image-container'
     ) as HTMLElement;
     if (!container) return;
-    const canvas = await html2canvas(container, {
-      useCORS: true,
-      backgroundColor: null,
-    });
-    const link = document.createElement('a');
-    link.href = canvas.toDataURL('image/png');
-    link.download = 'laser-eyes.png';
-    link.click();
+    try {
+      const dataUrl = await toPng(container, { cacheBust: true, backgroundColor: undefined });
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = 'laser-eyes.png';
+      link.click();
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
