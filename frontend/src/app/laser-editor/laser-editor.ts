@@ -17,10 +17,9 @@ interface Laser {
 export class LaserEditor {
   imageSrc: string | null = null;
   laser: Laser = { id: 1, class: 'eye-glow' };
-  overlay?: HTMLElement;
-  dragOffsetX = 0;
-  dragOffsetY = 0;
-  dragging = false;
+  overlays: HTMLElement[] = [];
+  dragOffsets: { x: number; y: number }[] = [];
+  draggingIndex: number | null = null;
 
   constructor(private host: ElementRef<HTMLElement>) {}
 
@@ -35,42 +34,54 @@ export class LaserEditor {
 
   onImageLoaded() {
     const container = this.host.nativeElement.querySelector('.image-container') as HTMLElement;
-    if (!container || this.overlay) return;
-    const div = document.createElement('div');
-    div.className = `laser ${this.laser.class}`;
-    div.style.left = '50%';
-    div.style.top = '50%';
-    div.style.transform = 'translate(-50%, -50%)';
-    div.addEventListener('pointerdown', this.startDrag.bind(this));
-    div.addEventListener('pointermove', this.onDrag.bind(this));
-    div.addEventListener('pointerup', this.endDrag.bind(this));
-    div.addEventListener('pointercancel', this.endDrag.bind(this));
-    container.appendChild(div);
-    this.overlay = div;
+    if (!container || this.overlays.length) return;
+
+    for (let i = 0; i < 2; i++) {
+      const div = document.createElement('div');
+      div.className = `laser ${this.laser.class}`;
+      div.dataset.index = i.toString();
+      div.style.left = '50%';
+      div.style.top = '50%';
+      div.style.transform = 'translate(-50%, -50%)';
+      div.addEventListener('pointerdown', this.startDrag.bind(this));
+      div.addEventListener('pointermove', this.onDrag.bind(this));
+      div.addEventListener('pointerup', this.endDrag.bind(this));
+      div.addEventListener('pointercancel', this.endDrag.bind(this));
+      container.appendChild(div);
+      this.overlays.push(div);
+      this.dragOffsets.push({ x: 0, y: 0 });
+    }
   }
 
   startDrag(event: PointerEvent) {
-    this.dragging = true;
-    const rect = (event.target as HTMLElement).getBoundingClientRect();
-    this.dragOffsetX = event.clientX - rect.left;
-    this.dragOffsetY = event.clientY - rect.top;
-    (event.target as HTMLElement).setPointerCapture(event.pointerId);
+    const target = event.target as HTMLElement;
+    const index = parseInt(target.dataset.index || '0', 10);
+    this.draggingIndex = index;
+    const rect = target.getBoundingClientRect();
+    this.dragOffsets[index] = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+    target.setPointerCapture(event.pointerId);
   }
 
   onDrag(event: PointerEvent) {
-    if (!this.dragging || !this.overlay) return;
+    if (this.draggingIndex === null) return;
+    const overlay = this.overlays[this.draggingIndex];
+    if (!overlay) return;
     const container = this.host.nativeElement.querySelector('.image-container') as HTMLElement;
     const rect = container.getBoundingClientRect();
-    const x = event.clientX - rect.left - this.dragOffsetX;
-    const y = event.clientY - rect.top - this.dragOffsetY;
-    this.overlay.style.left = `${x}px`;
-    this.overlay.style.top = `${y}px`;
-    this.overlay.style.transform = '';
+    const offset = this.dragOffsets[this.draggingIndex];
+    const x = event.clientX - rect.left - offset.x;
+    const y = event.clientY - rect.top - offset.y;
+    overlay.style.left = `${x}px`;
+    overlay.style.top = `${y}px`;
+    overlay.style.transform = '';
   }
 
   endDrag(event: PointerEvent) {
-    this.dragging = false;
     (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+    this.draggingIndex = null;
   }
 
   async download() {
