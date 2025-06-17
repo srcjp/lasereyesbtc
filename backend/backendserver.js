@@ -9,7 +9,9 @@ app.use(bodyParser.json());
 
 const coinosUrl = process.env.COINOS_URL || 'https://coinos.io';
 const coinosApiKey = process.env.COINOS_API_KEY; // JWT or API key
-const chargeAmount = parseInt(process.env.CHARGE_AMOUNT || '150'); // sats
+const minAmount = 150;
+const envAmount = parseInt(process.env.CHARGE_AMOUNT || String(minAmount));
+const chargeAmount = Math.max(envAmount, minAmount); // sats
 const chargeMemo = process.env.CHARGE_MEMO || 'Laser eyes download';
 
 app.post('/invoice', async (req, res) => {
@@ -19,7 +21,8 @@ app.post('/invoice', async (req, res) => {
       { invoice: { amount: chargeAmount, memo: chargeMemo } },
       {
         headers: {
-          Authorization: `Bearer ${coinosApiKey}`,
+          // Uncomment the line below to send your Coinos API key using an env var
+          // Authorization: `Bearer ${coinosApiKey}`,
           'Content-Type': 'application/json',
         },
       },
@@ -35,7 +38,8 @@ app.get('/invoice/:paymentHash', async (req, res) => {
   try {
     const { paymentHash } = req.params;
     const response = await axios.get(`${coinosUrl}/invoice/${paymentHash}`, {
-      headers: { Authorization: `Bearer ${coinosApiKey}` },
+      // Uncomment the line below to include your API key when checking invoices
+      // headers: { Authorization: `Bearer ${coinosApiKey}` },
     });
     res.json(response.data);
   } catch (err) {
