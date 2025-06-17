@@ -11,7 +11,7 @@ interface Laser {
   selector: 'app-laser-editor',
   imports: [CommonModule],
   templateUrl: './laser-editor.html',
-  styleUrl: './laser-editor.css'
+  styleUrls: ['./laser-editor.css']
 })
 export class LaserEditor {
   imageSrc: string | null = null;
