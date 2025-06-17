@@ -52,5 +52,16 @@
 }
 .controls {
   margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.controls button {
+  padding: 0.5rem 1rem;
+}
+
+.instruction {
+  margin: 0.5rem 0;
+  font-weight: 600;
 }
 

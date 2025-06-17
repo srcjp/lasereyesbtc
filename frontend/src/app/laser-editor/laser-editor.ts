@@ -37,6 +37,26 @@ export class LaserEditor {
       url:
         'https://cdn.glitch.me/a3cb1903-3df2-470f-9076-c2370808ed39%2Fthumbnails%2F041df0e054b8758c3bf248fdded66cb5.png',
     },
+    {
+      id: 5,
+      url:
+        'https://cdn.glitch.com/a3cb1903-3df2-470f-9076-c2370808ed39%2Fthumbnails%2F5a5a21cb6140c.png?1537075863176',
+    },
+    {
+      id: 6,
+      url:
+        'https://cdn.glitch.com/a3cb1903-3df2-470f-9076-c2370808ed39%2Fthumbnails%2F59ed23c7b36f67806d66409d592ce78a.png?1537078242814',
+    },
+    {
+      id: 7,
+      url:
+        'https://cdn.glitch.com/a3cb1903-3df2-470f-9076-c2370808ed39%2Fthumbnails%2F5bec82019edb11efd46eb56e25c55bc1.png?1537075744418',
+    },
+    {
+      id: 8,
+      url:
+        'https://cdn.glitch.com/a3cb1903-3df2-470f-9076-c2370808ed39%2Fthumbnails%2F0a2c2f06ee2c7fa2f04082d131deaded.png?1537075863785',
+    },
   ];
   selectedLaser: Laser = this.lasers[0];
   overlays: HTMLElement[] = [];
@@ -50,10 +70,7 @@ export class LaserEditor {
 
   selectLaser(l: Laser) {
     this.selectedLaser = l;
-    if (this.selectedOverlayIndex !== null) {
-      const overlay = this.overlays[this.selectedOverlayIndex];
-      overlay.style.backgroundImage = `url('${l.url}')`;
-    }
+    this.addOverlay(l);
   }
 
   onFileSelected(event: Event) {
@@ -67,21 +84,32 @@ export class LaserEditor {
 
   onImageLoaded() {
     if (this.overlays.length) return;
-    for (let i = 0; i < 2; i++) {
-      this.addOverlay();
+    if (this.lasers.length >= 2) {
+      this.addOverlay(this.lasers[0], '40%', '50%');
+      this.addOverlay(this.lasers[1], '60%', '50%');
+    } else {
+      for (let i = 0; i < 2; i++) {
+        this.addOverlay();
+      }
     }
   }
 
-  addOverlay(laser: Laser = this.selectedLaser) {
+  addOverlay(
+    laser: Laser = this.selectedLaser,
+    left: string = '50%',
+    top: string = '50%'
+  ) {
     const container = this.host.nativeElement.querySelector('.image-container') as HTMLElement;
     if (!container) return;
     const div = document.createElement('div');
     div.className = 'laser';
     div.style.backgroundImage = `url('${laser.url}')`;
     div.dataset['index'] = this.overlays.length.toString();
-    div.style.left = '50%';
-    div.style.top = '50%';
-    div.style.transform = 'translate(-50%, -50%)';
+    div.style.left = left;
+    div.style.top = top;
+    if (left.includes('%') || top.includes('%')) {
+      div.style.transform = 'translate(-50%, -50%)';
+    }
     div.addEventListener('pointerdown', this.startDrag.bind(this));
     div.addEventListener('pointermove', this.onDrag.bind(this));
     div.addEventListener('pointerup', this.endDrag.bind(this));
@@ -96,6 +124,14 @@ export class LaserEditor {
     container.appendChild(div);
     this.overlays.push(div);
     this.dragOffsets.push({ x: 0, y: 0 });
+    this.selectedOverlayIndex = this.overlays.length - 1;
+    this.overlays.forEach((el, idx) => {
+      if (idx === this.selectedOverlayIndex) {
+        el.classList.add('selected');
+      } else {
+        el.classList.remove('selected');
+      }
+    });
   }
 
   startDrag(event: PointerEvent) {

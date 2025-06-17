@@ -1,6 +1,7 @@
 <div>
-  <input type="file" (change)="onFileSelected($event)">
+  <input type="file" (change)="onFileSelected($event)" />
 </div>
+<p class="instruction">Click an image to add it to the canvas:</p>
 <div class="laser-options">
   <img
     *ngFor="let l of lasers"
@@ -15,8 +16,6 @@
   </div>
 </div>
 <div class="controls">
-  <button (click)="scaleSelected(1.2)">Aumentar</button>
-  <button (click)="scaleSelected(0.8)">Diminuir</button>
   <button (click)="deleteSelected()">Deletar</button>
   <button (click)="download()">Download</button>
 </div>
