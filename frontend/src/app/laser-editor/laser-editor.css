@@ -1,7 +1,7 @@
 .editor {
-  display: flex;
   margin-top: 1rem;
 }
+
 .image-container {
   position: relative;
   width: 400px;
@@ -9,36 +9,20 @@
   border: 1px dashed #ccc;
   overflow: hidden;
 }
+
 .image-container img {
   max-width: 100%;
 }
+
 .laser {
   position: absolute;
-  width: 150px;
-  height: 10px;
-  background: red;
-  transform: rotate(-20deg);
-}
-.laser1 { height: 6px; }
-.laser2 { height: 10px; }
-.laser3 { height: 8px; width: 200px; }
-.laser4 { height: 12px; width: 120px; }
-.laser5 { height: 5px; width: 180px; }
-
-.laser-list {
-  margin-left: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.laser-option {
-  width: 60px;
-  height: 10px;
-  background: red;
   cursor: grab;
 }
-.laser-option.laser1 { height: 6px; }
-.laser-option.laser2 { height: 10px; }
-.laser-option.laser3 { height: 8px; width: 80px; }
-.laser-option.laser4 { height: 12px; width: 40px; }
-.laser-option.laser5 { height: 5px; width: 90px; }
+
+.eye-glow {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 0, 0, 0.8) 0%, rgba(255, 0, 0, 0.3) 40%, rgba(255, 0, 0, 0) 70%);
+  box-shadow: 0 0 15px 8px rgba(255, 0, 0, 0.5);
+}
