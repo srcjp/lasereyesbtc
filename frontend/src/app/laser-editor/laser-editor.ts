@@ -43,8 +43,18 @@ export class LaserEditor {
   dragOffsets: { x: number; y: number }[] = [];
   draggingIndex: number | null = null;
   selectedOverlayIndex: number | null = null;
+  resizingIndex: number | null = null;
+  resizeStart: { width: number; height: number; x: number; y: number } | null = null;
 
   constructor(private host: ElementRef<HTMLElement>) {}
+
+  selectLaser(l: Laser) {
+    this.selectedLaser = l;
+    if (this.selectedOverlayIndex !== null) {
+      const overlay = this.overlays[this.selectedOverlayIndex];
+      overlay.style.backgroundImage = `url('${l.url}')`;
+    }
+  }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -76,13 +86,21 @@ export class LaserEditor {
     div.addEventListener('pointermove', this.onDrag.bind(this));
     div.addEventListener('pointerup', this.endDrag.bind(this));
     div.addEventListener('pointercancel', this.endDrag.bind(this));
+    const handle = document.createElement('div');
+    handle.className = 'resize-handle';
+    handle.addEventListener('pointerdown', this.startResize.bind(this));
+    handle.addEventListener('pointermove', this.onResize.bind(this));
+    handle.addEventListener('pointerup', this.endResize.bind(this));
+    handle.addEventListener('pointercancel', this.endResize.bind(this));
+    div.appendChild(handle);
     container.appendChild(div);
     this.overlays.push(div);
     this.dragOffsets.push({ x: 0, y: 0 });
   }
 
   startDrag(event: PointerEvent) {
-    const target = event.target as HTMLElement;
+    if ((event.target as HTMLElement).classList.contains('resize-handle')) return;
+    const target = event.currentTarget as HTMLElement;
     const index = parseInt(target.dataset['index'] || '0', 10);
     this.draggingIndex = index;
     this.selectedOverlayIndex = index;
@@ -120,6 +138,39 @@ export class LaserEditor {
     this.draggingIndex = null;
   }
 
+  startResize(event: PointerEvent) {
+    const handle = event.target as HTMLElement;
+    const parent = handle.parentElement as HTMLElement;
+    const index = parseInt(parent.dataset['index'] || '0', 10);
+    this.resizingIndex = index;
+    this.selectedOverlayIndex = index;
+    const rect = parent.getBoundingClientRect();
+    this.resizeStart = {
+      width: rect.width,
+      height: rect.height,
+      x: event.clientX,
+      y: event.clientY,
+    };
+    handle.setPointerCapture(event.pointerId);
+    event.stopPropagation();
+  }
+
+  onResize(event: PointerEvent) {
+    if (this.resizingIndex === null || !this.resizeStart) return;
+    const overlay = this.overlays[this.resizingIndex];
+    const dx = event.clientX - this.resizeStart.x;
+    const dy = event.clientY - this.resizeStart.y;
+    overlay.style.width = `${this.resizeStart.width + dx}px`;
+    overlay.style.height = `${this.resizeStart.height + dy}px`;
+  }
+
+  endResize(event: PointerEvent) {
+    (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+    this.resizingIndex = null;
+    this.resizeStart = null;
+    event.stopPropagation();
+  }
+
   scaleSelected(factor: number) {
     if (this.selectedOverlayIndex === null) return;
     const overlay = this.overlays[this.selectedOverlayIndex];
@@ -145,7 +196,10 @@ export class LaserEditor {
     ) as HTMLElement;
     if (!container) return;
     try {
+      const selected = Array.from(container.querySelectorAll('.laser.selected')) as HTMLElement[];
+      selected.forEach(el => el.classList.remove('selected'));
       const dataUrl = await toPng(container, { cacheBust: true, backgroundColor: undefined });
+      selected.forEach(el => el.classList.add('selected'));
       const link = document.createElement('a');
       link.href = dataUrl;
       link.download = 'laser-eyes.png';
