@@ -22,20 +22,10 @@
   position: absolute;
   width: 30px;
   height: 30px;
-  border-radius: 60% 40% 70% 30% / 30% 70% 30% 70%;
-  background: radial-gradient(circle at 30% 30%, yellow 0%, red 60%, red 100%);
+  border-radius: 50%;
+  background: radial-gradient(circle, yellow 0%, red 60%, red 100%);
   box-shadow: 0 0 10px 4px red;
   cursor: grab;
   z-index: 2;
-}
-
-.laser.selected {
-  border: 1px dashed white;
-}
-
-.instructions {
-  margin-left: 0.5rem;
-  font-size: 0.9rem;
-  color: #555;
 }
 

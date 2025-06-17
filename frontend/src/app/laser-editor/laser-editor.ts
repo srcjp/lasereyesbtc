@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
 
@@ -20,7 +20,6 @@ export class LaserEditor {
   overlays: HTMLElement[] = [];
   dragOffsets: { x: number; y: number }[] = [];
   draggingIndex: number | null = null;
-  selectedIndex: number | null = null;
 
   constructor(private host: ElementRef<HTMLElement>) {}
 
@@ -44,8 +43,6 @@ export class LaserEditor {
       div.style.left = '50%';
       div.style.top = '50%';
       div.style.transform = 'translate(-50%, -50%)';
-      div.style.width = '30px';
-      div.style.height = '30px';
       div.addEventListener('pointerdown', this.startDrag.bind(this));
       div.addEventListener('pointermove', this.onDrag.bind(this));
       div.addEventListener('pointerup', this.endDrag.bind(this));
@@ -60,7 +57,6 @@ export class LaserEditor {
     const target = event.target as HTMLElement;
     const index = parseInt(target.dataset['index'] || '0', 10);
     this.draggingIndex = index;
-    this.selectOverlay(index);
     const rect = target.getBoundingClientRect();
     this.dragOffsets[index] = {
       x: event.clientX - rect.left,
@@ -88,42 +84,15 @@ export class LaserEditor {
     this.draggingIndex = null;
   }
 
-  selectOverlay(index: number) {
-    this.selectedIndex = index;
-    this.overlays.forEach((o, i) => {
-      if (i === index) {
-        o.classList.add('selected');
-      } else {
-        o.classList.remove('selected');
-      }
-    });
-  }
-
-  @HostListener('window:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    if (this.selectedIndex === null) return;
-    const overlay = this.overlays[this.selectedIndex];
-    if (!overlay) return;
-    if (!(event.ctrlKey || event.metaKey)) return;
-    const width = parseFloat(overlay.style.width || getComputedStyle(overlay).width);
-    const height = parseFloat(overlay.style.height || getComputedStyle(overlay).height);
-    if (event.key === '-' || event.key === '_') {
-      overlay.style.width = width * 0.9 + 'px';
-      overlay.style.height = height * 0.9 + 'px';
-      event.preventDefault();
-    } else if (event.key === '=' || event.key === '+') {
-      overlay.style.width = width * 1.1 + 'px';
-      overlay.style.height = height * 1.1 + 'px';
-      event.preventDefault();
-    }
-  }
-
   async download() {
     const container = this.host.nativeElement.querySelector(
       '.image-container'
     ) as HTMLElement;
     if (!container) return;
-    const canvas = await html2canvas(container);
+    const canvas = await html2canvas(container, {
+      useCORS: true,
+      backgroundColor: null,
+    });
     const link = document.createElement('a');
     link.href = canvas.toDataURL('image/png');
     link.download = 'laser-eyes.png';
