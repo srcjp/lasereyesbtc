@@ -140,6 +140,7 @@ export class LaserEditor {
   }
 
   startDrag(event: PointerEvent) {
+    event.preventDefault();
     if ((event.target as HTMLElement).classList.contains('resize-handle')) return;
     const target = event.currentTarget as HTMLElement;
     const index = parseInt(target.dataset['index'] || '0', 10);
@@ -161,6 +162,7 @@ export class LaserEditor {
   }
 
   onDrag(event: PointerEvent) {
+    event.preventDefault();
     if (this.draggingIndex === null) return;
     const overlay = this.overlays[this.draggingIndex];
     if (!overlay) return;
@@ -180,6 +182,7 @@ export class LaserEditor {
   }
 
   startResize(event: PointerEvent) {
+    event.preventDefault();
     const handle = event.target as HTMLElement;
     const parent = handle.parentElement as HTMLElement;
     const index = parseInt(parent.dataset['index'] || '0', 10);
@@ -197,6 +200,7 @@ export class LaserEditor {
   }
 
   onResize(event: PointerEvent) {
+    event.preventDefault();
     if (this.resizingIndex === null || !this.resizeStart) return;
     const overlay = this.overlays[this.resizingIndex];
     const dx = event.clientX - this.resizeStart.x;

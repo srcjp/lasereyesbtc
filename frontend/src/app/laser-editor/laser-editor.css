@@ -32,6 +32,7 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  touch-action: none;
 }
 .laser.selected {
   outline: 2px dashed #0f0;
@@ -46,6 +47,7 @@
   border: 2px solid #000;
   cursor: nwse-resize;
   display: none;
+  touch-action: none;
 }
 .laser.selected .resize-handle {
   display: block;
