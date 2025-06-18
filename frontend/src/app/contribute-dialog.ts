@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-contribute-dialog',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule, MatInputModule, FormsModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatInputModule, FormsModule],
   template: `
     <h2 mat-dialog-title>Contribute</h2>
     <mat-dialog-content *ngIf="invoice">
