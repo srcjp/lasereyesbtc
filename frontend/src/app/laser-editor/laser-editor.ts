@@ -78,7 +78,7 @@ export class LaserEditor {
 
   selectLaser(l: Laser) {
     if (!this.imageSrc) {
-      alert('Please upload an image before downloading.');
+      alert('Please upload an image before choose a laser style.');
       return;
     }
     this.selectedLaser = l;
