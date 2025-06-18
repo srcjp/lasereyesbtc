@@ -77,6 +77,10 @@ export class LaserEditor {
   constructor(private host: ElementRef<HTMLElement>, private dialog: MatDialog) {}
 
   selectLaser(l: Laser) {
+    if (!this.imageSrc) {
+      alert('Please upload an image before downloading.');
+      return;
+    }
     this.selectedLaser = l;
     this.addOverlay(l);
   }
