@@ -257,6 +257,10 @@ export class LaserEditor {
   }
 
   download() {
+    if (!this.imageSrc) {
+      alert('Please upload an image before downloading.');
+      return;
+    }
     const ref = this.dialog.open(PayDialog);
     ref.afterClosed().subscribe(paid => {
       if (paid) {
