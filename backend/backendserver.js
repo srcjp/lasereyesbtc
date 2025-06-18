@@ -44,11 +44,10 @@ app.post('/invoice', async (req, res) => {
       `${coinosUrl}/invoice`,
       { invoice: { amount: chargeAmount, memo: chargeMemo } },
       {
-        headers: {
-          // Uncomment the line below to send your Coinos API key using an env var
-          // Authorization: `Bearer ${coinosApiKey}`,
-          'Content-Type': 'application/json',
-        },
+        headers: Object.assign(
+          { 'Content-Type': 'application/json' },
+          coinosApiKey ? { Authorization: `Bearer ${coinosApiKey}` } : {}
+        ),
       },
     );
     res.json(response.data);
@@ -62,8 +61,7 @@ app.get('/invoice/:paymentHash', async (req, res) => {
   try {
     const { paymentHash } = req.params;
     const response = await axios.get(`${coinosUrl}/invoice/${paymentHash}`, {
-      // Uncomment the line below to include your API key when checking invoices
-      // headers: { Authorization: `Bearer ${coinosApiKey}` },
+      headers: coinosApiKey ? { Authorization: `Bearer ${coinosApiKey}` } : {},
     });
     res.json(response.data);
   } catch (err) {
