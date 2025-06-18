@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
       <img [src]="qrSrc" alt="invoice QR" />
       <p><code>{{ invoice.payment_request }}</code></p>
       <p *ngIf="checking">Checking payment...</p>
+      <p *ngIf="error" class="error">{{ error }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
@@ -24,6 +25,7 @@ export class PayDialog implements OnInit, OnDestroy {
   qrSrc = '';
   checking = false;
   interval: any;
+  error = '';
 
   constructor(private ref: MatDialogRef<PayDialog>) {}
 
@@ -41,9 +43,13 @@ export class PayDialog implements OnInit, OnDestroy {
           this.checking = true;
           this.interval = setInterval(() => this.poll(hash), 5000);
         }
+      } else {
+        const data = await res.json().catch(() => ({}));
+        this.error = data.error || 'Failed to create invoice';
       }
     } catch (err) {
       console.error(err);
+      this.error = 'Failed to create invoice';
     }
   }
 

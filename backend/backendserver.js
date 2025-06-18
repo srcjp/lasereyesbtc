@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 
 const coinosUrl = process.env.COINOS_URL || 'https://coinos.io';
 const coinosApiKey = process.env.COINOS_API_KEY; // JWT or API key
+const coinosUsername = process.env.COINOS_USERNAME; // required by some instances
 const minAmount = 150;
 const envAmount = parseInt(process.env.CHARGE_AMOUNT || String(minAmount));
 const chargeAmount = Math.max(envAmount, minAmount); // sats
@@ -40,9 +41,13 @@ pool.query(
 
 app.post('/invoice', async (req, res) => {
   try {
+    const body = { invoice: { amount: chargeAmount, memo: chargeMemo } };
+    if (coinosUsername) {
+      body.user = { username: coinosUsername };
+    }
     const response = await axios.post(
       `${coinosUrl}/invoice`,
-      { invoice: { amount: chargeAmount, memo: chargeMemo } },
+      body,
       {
         headers: Object.assign(
           { 'Content-Type': 'application/json' },
