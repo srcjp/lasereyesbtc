@@ -75,6 +75,46 @@ app.get('/invoice/:paymentHash', async (req, res) => {
   }
 });
 
+// Stream invoice status updates using Server-Sent Events
+app.get('/invoice/:paymentHash/stream', async (req, res) => {
+  const { paymentHash } = req.params;
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  const headers = coinosApiKey ? { Authorization: `Bearer ${coinosApiKey}` } : {};
+
+  const checkPaid = (data) =>
+    data.state === 'paid' ||
+    data.state === 'settled' ||
+    data.state === 'complete' ||
+    data.status === 'paid' ||
+    data.status === 'settled' ||
+    data.settled ||
+    data.paid ||
+    data.paid_at ||
+    data.settled_at;
+
+  const interval = setInterval(async () => {
+    try {
+      const response = await axios.get(`${coinosUrl}/invoice/${paymentHash}`, { headers });
+      const data = response.data;
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
+      if (checkPaid(data)) {
+        clearInterval(interval);
+        res.end();
+      }
+    } catch (err) {
+      res.write(`event: error\ndata: ${JSON.stringify(err.response?.data || { error: 'cannot check payment' })}\n\n`);
+    }
+  }, 2000);
+
+  req.on('close', () => {
+    clearInterval(interval);
+  });
+});
+
 // Save donation information
 app.post('/donations', async (req, res) => {
   try {
