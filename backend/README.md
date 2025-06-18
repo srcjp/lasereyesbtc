@@ -24,14 +24,14 @@ It also provides `/donations` for posting and retrieving contributor rankings.
 
 ### Streaming invoice status
 
-To monitor an invoice until it is paid you can open a Server-Sent Events stream:
+To monitor an invoice until it is paid open a WebSocket connection:
 
 ```bash
-curl http://localhost:3000/invoice/<HASH>/stream
+websocat ws://localhost:3000/invoice/<HASH>/ws
 ```
 
-The endpoint checks the invoice on Coinos every two seconds and emits the
-current invoice JSON. The connection closes once the invoice is paid.
+The server checks the invoice on Coinos every two seconds and sends the
+current invoice JSON. The socket closes once the invoice is paid.
 
 The following database variables configure the PostgreSQL connection (defaults
 match the `docker-compose.yml` setup):
