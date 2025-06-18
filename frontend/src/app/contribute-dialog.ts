@@ -69,7 +69,8 @@ export class ContributeDialog implements OnInit {
           this.invoice.bolt11 ||
           this.invoice.payreq ||
           this.invoice.paymentRequest ||
-          this.invoice.request;
+          this.invoice.request ||
+          this.invoice.text;
         if (!pr) {
           this.error =
             this.invoice.message ||
