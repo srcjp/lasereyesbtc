@@ -41,7 +41,7 @@ import { CommonModule } from '@angular/common';
           <textarea matInput [(ngModel)]="form.message" name="message"></textarea>
         </mat-form-field>
       </form>
-    </mat-dialog-content>
+
     <mat-dialog-actions align="end">
       <button mat-button (click)="send()">Send</button>
       <button mat-button mat-dialog-close>Close</button>
