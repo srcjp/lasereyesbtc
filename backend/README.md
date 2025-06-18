@@ -15,6 +15,7 @@ Set the following environment variables before starting the server:
 
 - `COINOS_URL` – base URL of your Coinos instance (default `https://coinos.io`)
 - `COINOS_API_KEY` – API key or JWT token from Coinos
+- `COINOS_USERNAME` – username to bill invoices to (required by some instances)
 - `CHARGE_AMOUNT` – amount in satoshis for each invoice (minimum `150`, default `150`)
 - `CHARGE_MEMO` – memo to attach to created invoices (default `Laser eyes download`)
 
