@@ -30,7 +30,7 @@ export class PayDialog implements OnInit, OnDestroy {
   invoice: any = null;
   qrSrc = '';
   checking = false;
-  eventSource: EventSource | null = null;
+  ws: WebSocket | null = null;
   error = '';
 
   constructor(private ref: MatDialogRef<PayDialog>) {}
@@ -67,10 +67,11 @@ export class PayDialog implements OnInit, OnDestroy {
           invData.id;
         if (hash) {
           this.checking = true;
-          this.eventSource = new EventSource(
-            '/api/invoice/' + hash + '/stream',
+          const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+          this.ws = new WebSocket(
+            `${protocol}://${location.host}/api/invoice/${hash}/ws`
           );
-          this.eventSource.onmessage = (ev) => {
+          this.ws.onmessage = (ev) => {
             try {
               const data = JSON.parse(ev.data);
               const invoice = data.invoice || data;
@@ -86,27 +87,19 @@ export class PayDialog implements OnInit, OnDestroy {
                     : NaN) ||
                   (invoice.msatoshi ? Number(invoice.msatoshi) / 1000 : NaN);
                 if (isNaN(amount) || amount >= 150) {
-                  this.eventSource?.close();
+                  this.ws?.close();
                   this.ref.close(true);
                 } else {
                   this.error = 'Payment below required 150 sats';
-                  this.eventSource?.close();
+                  this.ws?.close();
                 }
               }
             } catch {}
           };
-          this.eventSource.addEventListener('error', (ev: MessageEvent) => {
-            try {
-              const errData = JSON.parse(ev.data);
-              this.error = errData.error || 'Cannot check payment';
-            } catch {
-              this.error = 'Cannot check payment';
-            }
-            this.eventSource?.close();
+          this.ws.onerror = () => {
+            this.error = 'Cannot check payment';
+            this.ws?.close();
             this.checking = false;
-          });
-          this.eventSource.onerror = () => {
-            this.eventSource?.close();
           };
         }
       } else {
@@ -135,6 +128,6 @@ export class PayDialog implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.eventSource?.close();
+    this.ws?.close();
   }
 }
