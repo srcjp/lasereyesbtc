@@ -56,7 +56,12 @@ export class PayDialog implements OnInit, OnDestroy {
           return;
         }
         this.qrSrc = await toDataURL(pr);
-        const hash = this.invoice.payment_hash || this.invoice.r_hash;
+        const hash =
+          this.invoice.payment_hash ||
+          this.invoice.r_hash ||
+          this.invoice.paymentHash ||
+          this.invoice.hash ||
+          this.invoice.id;
         if (hash) {
           this.checking = true;
           this.interval = setInterval(() => this.poll(hash), 5000);
@@ -76,7 +81,17 @@ export class PayDialog implements OnInit, OnDestroy {
       const res = await fetch('/api/invoice/' + hash);
       if (res.ok) {
         const data = await res.json();
-        if (data.state === 'paid' || data.settled || data.paid) {
+        if (
+          data.state === 'paid' ||
+          data.state === 'settled' ||
+          data.state === 'complete' ||
+          data.status === 'paid' ||
+          data.status === 'settled' ||
+          data.settled ||
+          data.paid ||
+          data.paid_at ||
+          data.settled_at
+        ) {
           const amount =
             Number(data.amount) ||
             Number(data.value) ||
