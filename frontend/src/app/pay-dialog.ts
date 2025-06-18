@@ -36,7 +36,9 @@ export class PayDialog implements OnInit, OnDestroy {
     try {
       const res = await fetch('/api/invoice', { method: 'POST' });
       if (res.ok) {
-        this.invoice = await res.json();
+        const data = await res.json();
+        // Some Coinos responses wrap the invoice in an `invoice` object
+        this.invoice = data.invoice || data;
         const pr = this.invoice.payment_request || this.invoice.pr;
         if (!pr) {
           this.error = 'Invalid invoice received';
