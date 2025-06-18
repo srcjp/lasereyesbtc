@@ -33,7 +33,9 @@ node backendserver.js
 ```
 
 The server requires the following environment variables:
-- `COINOS_URL` – base URL of your Coinos instance (default `https://coinos.io`)
+- `COINOS_URL` – base URL of your Coinos instance **without the `/api` path**
+  (default `https://coinos.io`). The backend automatically calls the API under
+  `/api`.
 - `COINOS_API_KEY` – API key or JWT token from Coinos (added automatically as a
   `Bearer` Authorization header if set)
 - `COINOS_USERNAME` – username to bill invoices to (required when the API key
