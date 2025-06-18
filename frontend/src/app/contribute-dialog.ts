@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { toDataURL } from 'qrcode';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -70,9 +71,7 @@ export class ContributeDialog implements OnInit {
           this.error = 'Invalid invoice received';
           return;
         }
-        this.qrSrc =
-          'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' +
-          encodeURIComponent(pr);
+        this.qrSrc = await toDataURL(pr);
       }
     } catch (err) {
       console.error(err);

@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { toDataURL } from 'qrcode';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -47,9 +48,7 @@ export class PayDialog implements OnInit, OnDestroy {
           this.error = 'Invalid invoice received';
           return;
         }
-        this.qrSrc =
-          'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' +
-          encodeURIComponent(pr);
+        this.qrSrc = await toDataURL(pr);
         const hash = this.invoice.payment_hash || this.invoice.r_hash;
         if (hash) {
           this.checking = true;
