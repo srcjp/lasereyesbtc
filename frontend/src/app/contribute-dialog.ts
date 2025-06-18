@@ -66,9 +66,15 @@ export class ContributeDialog implements OnInit {
         const pr =
           this.invoice.payment_request ||
           this.invoice.pr ||
-          this.invoice.bolt11;
+          this.invoice.bolt11 ||
+          this.invoice.payreq ||
+          this.invoice.paymentRequest ||
+          this.invoice.request;
         if (!pr) {
-          this.error = 'Invalid invoice received';
+          this.error =
+            this.invoice.message ||
+            this.invoice.error ||
+            'Invalid invoice received';
           return;
         }
         this.qrSrc = await toDataURL(pr);
