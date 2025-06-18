@@ -1,0 +1,8 @@
+.method-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.method-buttons button.active {
+  font-weight: bold;
+}
