@@ -32,6 +32,8 @@ pool.query(
     nostr TEXT,
     twitter TEXT,
     instagram TEXT,
+    nickname TEXT,
+    message TEXT,
     donated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
   )`
 ).catch((err) => console.error('DB init error', err));
@@ -73,10 +75,10 @@ app.get('/invoice/:paymentHash', async (req, res) => {
 // Save donation information
 app.post('/donations', async (req, res) => {
   try {
-    const { amount, nostr, twitter, instagram, date } = req.body;
+    const { amount, nostr, twitter, instagram, nickname, message, date } = req.body;
     await pool.query(
-      'INSERT INTO donations(amount, nostr, twitter, instagram, donated_at) VALUES($1,$2,$3,$4,$5)',
-      [amount, nostr, twitter, instagram, date]
+      'INSERT INTO donations(amount, nostr, twitter, instagram, nickname, message, donated_at) VALUES($1,$2,$3,$4,$5,$6,$7)',
+      [amount, nostr, twitter, instagram, nickname, message, date]
     );
     res.json({ status: 'ok' });
   } catch (err) {
@@ -89,7 +91,7 @@ app.post('/donations', async (req, res) => {
 app.get('/donations', async (_req, res) => {
   try {
     const { rows } = await pool.query(
-      'SELECT amount, nostr, twitter, instagram, donated_at FROM donations ORDER BY amount DESC'
+      'SELECT amount, nostr, twitter, instagram, nickname, message, donated_at FROM donations ORDER BY amount DESC'
     );
     res.json(rows);
   } catch (err) {
