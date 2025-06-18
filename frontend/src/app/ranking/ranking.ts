@@ -6,6 +6,7 @@ interface Contributor {
   nostr: string;
   twitter: string;
   instagram: string;
+  message: string;
   amount: number;
 }
 
@@ -25,10 +26,11 @@ export class Ranking implements OnInit {
       if (!res.ok) throw new Error('failed');
       const data = await res.json();
       this.contributors = data.map((d: any) => ({
-        name: d.twitter || d.nostr || d.instagram || 'anon',
+        name: d.nickname || d.twitter || d.nostr || d.instagram || 'anon',
         nostr: d.nostr,
         twitter: d.twitter,
         instagram: d.instagram,
+        message: d.message,
         amount: d.amount
       }));
     } catch (err) {

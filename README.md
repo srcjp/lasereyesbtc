@@ -51,3 +51,7 @@ environment variables (values shown match the compose setup):
 - `PGUSER` (`postgres`)
 - `PGPASSWORD` (`postgres`)
 - `PGDATABASE` (`lasereyes`)
+
+When running the backend outside of Docker, the host `db` used in the
+compose setup will not resolve. Set `PGHOST` to `localhost` so the server can
+connect to your local PostgreSQL instance.
