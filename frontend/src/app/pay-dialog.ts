@@ -58,12 +58,13 @@ export class PayDialog implements OnInit, OnDestroy {
           return;
         }
         this.qrSrc = await toDataURL(pr);
+        const invData = (this.invoice as any).invoice || this.invoice;
         const hash =
-          this.invoice.payment_hash ||
-          this.invoice.r_hash ||
-          this.invoice.paymentHash ||
-          this.invoice.hash ||
-          this.invoice.id;
+          invData.payment_hash ||
+          invData.r_hash ||
+          invData.paymentHash ||
+          invData.hash ||
+          invData.id;
         if (hash) {
           this.checking = true;
           this.eventSource = new EventSource(
@@ -72,17 +73,18 @@ export class PayDialog implements OnInit, OnDestroy {
           this.eventSource.onmessage = (ev) => {
             try {
               const data = JSON.parse(ev.data);
-              if (this.isPaid(data)) {
+              const invoice = data.invoice || data;
+              if (this.isPaid(invoice)) {
                 const amount =
-                  Number(data.amount) ||
-                  Number(data.value) ||
-                  Number(data.tokens) ||
-                  Number(data.settle_amount) ||
-                  Number(data.settled_amount) ||
-                  (data.amt_paid_msat
-                    ? Number(data.amt_paid_msat) / 1000
+                  Number(invoice.amount) ||
+                  Number(invoice.value) ||
+                  Number(invoice.tokens) ||
+                  Number(invoice.settle_amount) ||
+                  Number(invoice.settled_amount) ||
+                  (invoice.amt_paid_msat
+                    ? Number(invoice.amt_paid_msat) / 1000
                     : NaN) ||
-                  (data.msatoshi ? Number(data.msatoshi) / 1000 : NaN);
+                  (invoice.msatoshi ? Number(invoice.msatoshi) / 1000 : NaN);
                 if (isNaN(amount) || amount >= 150) {
                   this.eventSource?.close();
                   this.ref.close(true);
@@ -93,6 +95,16 @@ export class PayDialog implements OnInit, OnDestroy {
               }
             } catch {}
           };
+          this.eventSource.addEventListener('error', (ev: MessageEvent) => {
+            try {
+              const errData = JSON.parse(ev.data);
+              this.error = errData.error || 'Cannot check payment';
+            } catch {
+              this.error = 'Cannot check payment';
+            }
+            this.eventSource?.close();
+            this.checking = false;
+          });
           this.eventSource.onerror = () => {
             this.eventSource?.close();
           };
@@ -108,16 +120,17 @@ export class PayDialog implements OnInit, OnDestroy {
   }
 
   private isPaid(data: any): boolean {
+    const inv = data.invoice || data;
     return (
-      data.state === 'paid' ||
-      data.state === 'settled' ||
-      data.state === 'complete' ||
-      data.status === 'paid' ||
-      data.status === 'settled' ||
-      data.settled ||
-      data.paid ||
-      data.paid_at ||
-      data.settled_at
+      inv.state === 'paid' ||
+      inv.state === 'settled' ||
+      inv.state === 'complete' ||
+      inv.status === 'paid' ||
+      inv.status === 'settled' ||
+      inv.settled ||
+      inv.paid ||
+      inv.paid_at ||
+      inv.settled_at
     );
   }
 
