@@ -1,6 +1,6 @@
 # LaserEyesBTC
 
-This repository contains a simple Angular frontend and Express backend that demonstrates a basic Lightning Network integration. The frontend lets users add "laser eyes" to an uploaded picture while the backend now uses the [Coinos](https://coinos.io) API to create and verify invoices.
+This repository contains a simple Angular frontend and Express backend that demonstrates a basic Lightning Network integration. The frontend lets users add "laser eyes" to an uploaded picture while the backend now uses the [Coinos](https://coinos.io) API to create and verify invoices. Downloads of edited images are gated behind a Lightning invoice of at least **150** satoshis which is verified through the same API.
 
 ```
 backend/  - Express server exposing /invoice endpoints

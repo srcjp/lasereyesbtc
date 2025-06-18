@@ -1,6 +1,8 @@
 import { Component, ElementRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { PayDialog } from '../pay-dialog';
 import { toPng } from 'html-to-image';
 
 interface Laser {
@@ -11,7 +13,7 @@ interface Laser {
 @Component({
   selector: 'app-laser-editor',
   standalone: true,
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule, MatDialogModule],
   templateUrl: './laser-editor.html',
   styleUrls: ['./laser-editor.css'],
   encapsulation: ViewEncapsulation.None,
@@ -72,7 +74,7 @@ export class LaserEditor {
   resizingIndex: number | null = null;
   resizeStart: { width: number; height: number; x: number; y: number } | null = null;
 
-  constructor(private host: ElementRef<HTMLElement>) {}
+  constructor(private host: ElementRef<HTMLElement>, private dialog: MatDialog) {}
 
   selectLaser(l: Laser) {
     this.selectedLaser = l;
@@ -254,7 +256,16 @@ export class LaserEditor {
     }
   }
 
-  async download() {
+  download() {
+    const ref = this.dialog.open(PayDialog);
+    ref.afterClosed().subscribe(paid => {
+      if (paid) {
+        this.downloadImage();
+      }
+    });
+  }
+
+  async downloadImage() {
     const container = this.host.nativeElement.querySelector(
       '.image-container'
     ) as HTMLElement;
