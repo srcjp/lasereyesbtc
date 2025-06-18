@@ -77,8 +77,21 @@ export class PayDialog implements OnInit, OnDestroy {
       if (res.ok) {
         const data = await res.json();
         if (data.state === 'paid' || data.settled || data.paid) {
-          clearInterval(this.interval);
-          this.ref.close(true);
+          const amount =
+            Number(data.amount) ||
+            Number(data.value) ||
+            Number(data.tokens) ||
+            Number(data.settle_amount) ||
+            Number(data.settled_amount) ||
+            (data.amt_paid_msat ? Number(data.amt_paid_msat) / 1000 : NaN) ||
+            (data.msatoshi ? Number(data.msatoshi) / 1000 : NaN);
+          if (isNaN(amount) || amount >= 150) {
+            clearInterval(this.interval);
+            this.ref.close(true);
+          } else {
+            this.error = 'Payment below required 150 sats';
+            clearInterval(this.interval);
+          }
         }
       }
     } catch {}
