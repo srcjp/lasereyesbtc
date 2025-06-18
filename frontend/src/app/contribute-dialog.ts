@@ -59,7 +59,9 @@ export class ContributeDialog implements OnInit {
     try {
       const res = await fetch('/api/invoice', { method: 'POST' });
       if (res.ok) {
-        this.invoice = await res.json();
+        const data = await res.json();
+        // Coinos may nest the actual invoice under `invoice`
+        this.invoice = data.invoice || data;
         const pr = this.invoice.payment_request || this.invoice.pr;
         if (!pr) {
           this.error = 'Invalid invoice received';
@@ -80,7 +82,7 @@ export class ContributeDialog implements OnInit {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: this.invoice?.invoice?.amount || 0,
+          amount: this.invoice?.amount || 0,
           ...this.form,
           date: new Date().toISOString(),
         }),
