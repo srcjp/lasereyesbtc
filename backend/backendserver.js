@@ -48,7 +48,7 @@ app.post('/invoice', async (req, res) => {
       body.user = { username: coinosUsername };
     }
     const response = await axios.post(
-      `${coinosUrl}/invoice`,
+      `${coinosUrl}/api/invoice`,
       body,
       {
         headers: Object.assign(
@@ -67,7 +67,7 @@ app.post('/invoice', async (req, res) => {
 app.get('/invoice/:paymentHash', async (req, res) => {
   try {
     const { paymentHash } = req.params;
-    const response = await axios.get(`${coinosUrl}/invoice/${paymentHash}`, {
+    const response = await axios.get(`${coinosUrl}/api/invoice/${paymentHash}`, {
       headers: coinosApiKey ? { Authorization: `Bearer ${coinosApiKey}` } : {},
     });
     res.json(response.data);
@@ -132,7 +132,7 @@ wss.on('connection', (ws, req) => {
 
   const interval = setInterval(async () => {
     try {
-      const { data } = await axios.get(`${coinosUrl}/invoice/${paymentHash}`, { headers });
+      const { data } = await axios.get(`${coinosUrl}/api/invoice/${paymentHash}`, { headers });
       ws.send(JSON.stringify(data));
       if (checkPaid(data)) {
         clearInterval(interval);

@@ -13,7 +13,9 @@ node backendserver.js
 
 Set the following environment variables before starting the server:
 
-- `COINOS_URL` – base URL of your Coinos instance (default `https://coinos.io`)
+- `COINOS_URL` – base URL of your Coinos instance **without the `/api` path**
+  (default `https://coinos.io`). The server automatically requests endpoints
+  under `/api`.
 - `COINOS_API_KEY` – API key or JWT token from Coinos
 - `COINOS_USERNAME` – username to bill invoices to (required by some instances)
 - `CHARGE_AMOUNT` – amount in satoshis for each invoice (minimum `150`, default `150`)
