@@ -12,7 +12,9 @@ import { MatButtonModule } from '@angular/material/button';
     <h2 mat-dialog-title>Pay 150 sats to download</h2>
     <mat-dialog-content *ngIf="invoice; else errTpl">
       <img [src]="qrSrc" alt="invoice QR" />
-      <p><code>{{ invoice.payment_request }}</code></p>
+      <p>
+        <code>{{ invoice.payment_request }}</code>
+      </p>
       <p *ngIf="checking">Checking payment...</p>
       <p *ngIf="error" class="error">{{ error }}</p>
     </mat-dialog-content>
@@ -28,7 +30,7 @@ export class PayDialog implements OnInit, OnDestroy {
   invoice: any = null;
   qrSrc = '';
   checking = false;
-  interval: any;
+  eventSource: EventSource | null = null;
   error = '';
 
   constructor(private ref: MatDialogRef<PayDialog>) {}
@@ -64,7 +66,36 @@ export class PayDialog implements OnInit, OnDestroy {
           this.invoice.id;
         if (hash) {
           this.checking = true;
-          this.interval = setInterval(() => this.poll(hash), 5000);
+          this.eventSource = new EventSource(
+            '/api/invoice/' + hash + '/stream',
+          );
+          this.eventSource.onmessage = (ev) => {
+            try {
+              const data = JSON.parse(ev.data);
+              if (this.isPaid(data)) {
+                const amount =
+                  Number(data.amount) ||
+                  Number(data.value) ||
+                  Number(data.tokens) ||
+                  Number(data.settle_amount) ||
+                  Number(data.settled_amount) ||
+                  (data.amt_paid_msat
+                    ? Number(data.amt_paid_msat) / 1000
+                    : NaN) ||
+                  (data.msatoshi ? Number(data.msatoshi) / 1000 : NaN);
+                if (isNaN(amount) || amount >= 150) {
+                  this.eventSource?.close();
+                  this.ref.close(true);
+                } else {
+                  this.error = 'Payment below required 150 sats';
+                  this.eventSource?.close();
+                }
+              }
+            } catch {}
+          };
+          this.eventSource.onerror = () => {
+            this.eventSource?.close();
+          };
         }
       } else {
         const data = await res.json().catch(() => ({}));
@@ -76,45 +107,21 @@ export class PayDialog implements OnInit, OnDestroy {
     }
   }
 
-  async poll(hash: string) {
-    try {
-      const res = await fetch('/api/invoice/' + hash);
-      if (res.ok) {
-        const data = await res.json();
-        if (
-          data.state === 'paid' ||
-          data.state === 'settled' ||
-          data.state === 'complete' ||
-          data.status === 'paid' ||
-          data.status === 'settled' ||
-          data.settled ||
-          data.paid ||
-          data.paid_at ||
-          data.settled_at
-        ) {
-          const amount =
-            Number(data.amount) ||
-            Number(data.value) ||
-            Number(data.tokens) ||
-            Number(data.settle_amount) ||
-            Number(data.settled_amount) ||
-            (data.amt_paid_msat ? Number(data.amt_paid_msat) / 1000 : NaN) ||
-            (data.msatoshi ? Number(data.msatoshi) / 1000 : NaN);
-          if (isNaN(amount) || amount >= 150) {
-            clearInterval(this.interval);
-            this.ref.close(true);
-          } else {
-            this.error = 'Payment below required 150 sats';
-            clearInterval(this.interval);
-          }
-        }
-      }
-    } catch {}
+  private isPaid(data: any): boolean {
+    return (
+      data.state === 'paid' ||
+      data.state === 'settled' ||
+      data.state === 'complete' ||
+      data.status === 'paid' ||
+      data.status === 'settled' ||
+      data.settled ||
+      data.paid ||
+      data.paid_at ||
+      data.settled_at
+    );
   }
 
   ngOnDestroy() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
+    this.eventSource?.close();
   }
 }
