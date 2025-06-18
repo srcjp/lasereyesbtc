@@ -39,7 +39,10 @@ export class PayDialog implements OnInit, OnDestroy {
         const data = await res.json();
         // Some Coinos responses wrap the invoice in an `invoice` object
         this.invoice = data.invoice || data;
-        const pr = this.invoice.payment_request || this.invoice.pr;
+        const pr =
+          this.invoice.payment_request ||
+          this.invoice.pr ||
+          this.invoice.bolt11;
         if (!pr) {
           this.error = 'Invalid invoice received';
           return;
