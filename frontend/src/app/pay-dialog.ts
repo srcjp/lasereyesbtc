@@ -9,12 +9,15 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [CommonModule, MatDialogModule, MatButtonModule],
   template: `
     <h2 mat-dialog-title>Pay 150 sats to download</h2>
-    <mat-dialog-content *ngIf="invoice">
+    <mat-dialog-content *ngIf="invoice; else errTpl">
       <img [src]="qrSrc" alt="invoice QR" />
       <p><code>{{ invoice.payment_request }}</code></p>
       <p *ngIf="checking">Checking payment...</p>
       <p *ngIf="error" class="error">{{ error }}</p>
     </mat-dialog-content>
+    <ng-template #errTpl>
+      <p *ngIf="error" class="error">{{ error }}</p>
+    </ng-template>
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
     </mat-dialog-actions>
@@ -35,6 +38,10 @@ export class PayDialog implements OnInit, OnDestroy {
       if (res.ok) {
         this.invoice = await res.json();
         const pr = this.invoice.payment_request || this.invoice.pr;
+        if (!pr) {
+          this.error = 'Invalid invoice received';
+          return;
+        }
         this.qrSrc =
           'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' +
           encodeURIComponent(pr);
