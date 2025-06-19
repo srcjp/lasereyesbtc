@@ -17,6 +17,9 @@ backend images and launches a PostgreSQL database. To start the entire stack run
 ```bash
 docker compose up -d
 ```
+```bash
+docker compose up --build
+```
 
 The Angular app will be available on port `8080` and the backend API on port
 `3000`. Environment variables such as `COINOS_API_KEY` can be passed to
