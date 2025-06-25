@@ -15,7 +15,6 @@ import { MatButtonModule } from '@angular/material/button';
       <p>
         <code>{{ invoice.payment_request }}</code>
       </p>
-      <p *ngIf="checking">Checking payment...</p>
       <p *ngIf="error" class="error">{{ error }}</p>
     </mat-dialog-content>
     <ng-template #errTpl>

@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   db:
     image: postgres:16-alpine
@@ -8,31 +9,49 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - proxy
 
   backend:
     build: ./backend
+    expose:
+      - '3000'
     environment:
       COINOS_URL: ${COINOS_URL:-https://coinos.io}
-      COINOS_API_KEY: ${COINOS_API_KEY}
+      COINOS_API_KEY: ''
+      COINOS_USERNAME: ''
       CHARGE_AMOUNT: ${CHARGE_AMOUNT:-150}
       CHARGE_MEMO: ${CHARGE_MEMO:-Laser eyes download}
       PGHOST: db
       PGUSER: postgres
       PGPASSWORD: postgres
       PGDATABASE: lasereyes
-    ports:
-      - "3000:3000"
+      VIRTUAL_HOST: lsreyes.com
+      LETSENCRYPT_HOST: lsreyes.com
+      LETSENCRYPT_EMAIL: jpfurlan@hotmail.com.br
     depends_on:
       - db
     restart: unless-stopped
+    networks:
+      - proxy
 
   frontend:
     build: ./frontend
-    ports:
-      - "8080:80"
+    expose:
+      - '80'
+    environment:
+      VIRTUAL_HOST: lsreyes.com,www.lsreyes.com
+      LETSENCRYPT_HOST: lsreyes.com,www.lsreyes.com
+      LETSENCRYPT_EMAIL: jpfurlan@hotmail.com.br
     depends_on:
       - backend
     restart: unless-stopped
+    networks:
+      - proxy
 
 volumes:
   db-data:
+
+networks:
+  proxy:
+    external: true
