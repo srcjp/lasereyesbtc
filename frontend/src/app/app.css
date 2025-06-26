@@ -28,11 +28,9 @@ footer.credits {
   justify-content: center;
   align-items: center;
   padding: 1rem 0;
-}
-
-footer.credits img {
-  height: 2.5rem;
-  width: 2.5rem;
-  margin-left: 0.25rem;
-  border-radius: 50%;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #000;
+  color: #fff;
 }
