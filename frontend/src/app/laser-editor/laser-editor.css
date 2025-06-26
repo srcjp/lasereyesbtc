@@ -22,7 +22,7 @@
   display: block;
   width: 100%;
   max-width: 80vw;
-  max-height: 80vh;
+  max-height: 60vh;
   object-fit: contain;
 }
 
