@@ -22,3 +22,17 @@ main {
   align-items: center;
   text-align: center;
 }
+
+footer.credits {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+footer.credits img {
+  height: 2.5rem;
+  width: 2.5rem;
+  margin-left: 0.25rem;
+  border-radius: 50%;
+}
