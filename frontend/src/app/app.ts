@@ -28,7 +28,4 @@ export class App {
     this.dialog.open(ContributeDialog);
   }
 
-  openJp() {
-    window.open('https://jpfurlan.dev/', '_blank', 'noopener');
-  }
 }

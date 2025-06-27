@@ -109,6 +109,11 @@
   margin-left: 0;
 }
 
+.editor .choose-image::after {
+  content: ' \2191';
+  margin-left: 0.25rem;
+}
+
 .controls button {
   padding: 0.5rem 1rem;
 }
