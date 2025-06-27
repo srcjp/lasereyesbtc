@@ -3,6 +3,7 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 import { LaserEditor } from './laser-editor/laser-editor';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ContributeDialog } from './contribute-dialog';
+import { HowToDialog } from './howto-dialog';
 import { PayDialog } from './pay-dialog';
 
 @Component({
@@ -14,6 +15,7 @@ import { PayDialog } from './pay-dialog';
     LaserEditor,
     MatDialogModule,
     ContributeDialog,
+    HowToDialog,
     PayDialog,
   ],
   templateUrl: './app.html',
@@ -26,6 +28,9 @@ export class App {
 
   openContribute() {
     this.dialog.open(ContributeDialog);
+  }
+  openHowTo() {
+    this.dialog.open(HowToDialog);
   }
 
 }
